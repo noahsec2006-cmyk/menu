@@ -1,0 +1,2322 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>قائمة المنتجات | شركة سالم علي - مصنع المصرية</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap & Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --primary: #FF6B00;
+            --bg-main: #0a0a0c;
+            --bg-card: #121318;
+            --text-light: #ffffff;
+            --text-dim: #8b8d98;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-light);
+            min-height: 100vh;
+            margin: 0;
+            padding-bottom: 80px;
+            /* Disable heavy scrolling effects on body */
+            overscroll-behavior-y: none; 
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 
+         * FAST BACKGROUND 
+         * Replaced heavy blur animations with a static, highly optimized radial gradient 
+         */
+        .premium-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(255, 107, 0, 0.04), transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.02), transparent 50%);
+        }
+
+        /* Header */
+        .menu-header {
+            padding: 2.5rem 0 1.5rem;
+            text-align: center;
+        }
+        .menu-title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--text-light);
+            margin-bottom: 0.2rem;
+            letter-spacing: -1px;
+        }
+        .menu-title span {
+            color: var(--primary);
+        }
+        .menu-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        /* Categories Filter - Super Smooth */
+        .category-filter {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 5px 15px 20px;
+            margin: 0 -15px 1rem;
+            scroll-behavior: smooth;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .category-filter::-webkit-scrollbar { display: none; }
+        
+        .cat-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: #1a1b23;
+            border: 1px solid #2a2b36;
+            color: var(--text-dim);
+            padding: 10px 24px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease-out;
+        }
+        .cat-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
+            transform: scale(1.02);
+        }
+
+        /* 
+         * ULTRA FAST SLIDE-UP CARD 
+         * Uses only hardware accelerated properties (transform, opacity)
+         */
+        .product-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid #232530;
+            overflow: hidden;
+            position: relative;
+            height: 340px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            /* Fast tap response */
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .product-card:active {
+            transform: scale(0.97);
+        }
+
+        .product-img-wrapper {
+            height: 60%;
+            background: #0f1015;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            position: relative;
+        }
+        .product-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+        }
+        .product-code {
+            position: absolute;
+            top: 12px; right: 12px;
+            background: rgba(0,0,0,0.8);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            border: 1px solid #333;
+            z-index: 2;
+        }
+
+        .product-info {
+            height: 40%;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .product-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin: 0;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .product-category {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-top: 2px;
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: auto;
+        }
+        .price-val {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1;
+        }
+        .price-curr {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-right: 2px;
+        }
+
+        /* The Slide-Up Overlay for Details */
+        .details-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(18, 19, 24, 0.98);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            transform: translateY(101%);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1);
+            z-index: 10;
+        }
+        .product-card.show-details .details-overlay {
+            transform: translateY(0);
+        }
+
+        .details-overlay .product-name {
+            white-space: normal;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #2a2b36;
+        }
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .detail-value {
+            color: #fff;
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        .close-details-btn {
+            margin-top: auto;
+            background: #2a2b36;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Minimal Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 1rem;
+        }
+        .empty-icon {
+            font-size: 3.5rem;
+            color: #2a2b36;
+            margin-bottom: 1rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="premium-bg"></div>
+
+    <div class="container px-4 pb-5">
+        
+        <header class="menu-header">
+            <h1 class="menu-title">المينيو <span>.</span></h1>
+            <div class="menu-subtitle">شركة سالم علي - مصنع المصرية</div>
+            
+                    </header>
+
+        
+        <!-- Categories Filter -->
+        <div class="category-filter" id="catFilter">
+                            <a href="javascript:void(0)" onclick="filterCategory(event, 'all')" class="cat-btn active">الكل</a>
+                                    <a href="javascript:void(0)" onclick="filterCategory(event, '5')" class="cat-btn">
+                        اقفاص
+                    </a>
+                                    <a href="javascript:void(0)" onclick="filterCategory(event, '9')" class="cat-btn">
+                        سجانات
+                    </a>
+                                    <a href="javascript:void(0)" onclick="filterCategory(event, '10')" class="cat-btn">
+                        قطط
+                    </a>
+                                    <a href="javascript:void(0)" onclick="filterCategory(event, '12')" class="cat-btn">
+                        اكسسوارات
+                    </a>
+                                    <a href="javascript:void(0)" onclick="filterCategory(event, '13')" class="cat-btn">
+                        حديد
+                    </a>
+                                    </div>
+
+        <!-- Products Grid -->
+                    <div class="row g-3" id="productsContainer">
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">S1</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784115994_6a57731a8e49e.jpeg" alt="ايطالي" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">ايطالي</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">70</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">ايطالي</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">40x22x29</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">10 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">70 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">S2</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784117710_6a5779cea7d9e.jpeg" alt="مصري" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">مصري</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">60</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">مصري</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">40x22x29</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">10 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">60 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">ٍS3</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784116631_6a5775973c28e.jpeg" alt="سوري" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">سوري</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">61</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">سوري</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">40x22x29</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">10 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">61 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">S4</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784118322_6a577c3292cbf.jpeg" alt="سلاكه استرالي" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">سلاكه استرالي</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">80</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">سلاكه استرالي</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">100x30x25</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">80 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">S5</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784117300_6a5778346d64b.jpeg" alt="قفص كوكتيل" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">قفص كوكتيل</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">150</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">قفص كوكتيل</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">40x35</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">150 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">S6</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784120702_6a57857e0b705.jpeg" alt="3 اكاله كبير" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">3 اكاله كبير</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">130</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">3 اكاله كبير</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">52x42x30</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">10 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">130 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">S10</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784118382_6a577c6ec8d30.jpeg" alt="3اكاله صغير" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">3اكاله صغير</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">85</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">3اكاله صغير</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">24x22x33</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">10 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">85 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="9">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">C1</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784118599_6a577d473b4c1.jpeg" alt="سجانه ٦٠" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">سجانه ٦٠</h3>
+                                <div class="product-category">سجانات</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">350</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">سجانه ٦٠</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">60x40</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">350 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="9">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">C2</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784118085_6a577b45405eb.jpeg" alt="سجانه٨٠" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">سجانه٨٠</h3>
+                                <div class="product-category">سجانات</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">400</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">سجانه٨٠</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">75x45</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">400 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="9">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">C3</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784136655_6a57c3cf206d3.jpeg" alt="سجانه متر" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">سجانه متر</h3>
+                                <div class="product-category">سجانات</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">750</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">سجانه متر</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">100x60</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">750 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">601</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784118896_6a577e70ec5a6.jpeg" alt="60×40 ق" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">60×40 ق</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">300</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">60×40 ق</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">9 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">300 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">S7</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784116764_6a57761cd31e1.jpeg" alt="قفص اسطوانه" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">قفص اسطوانه</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">145</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">قفص اسطوانه</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">5 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">145 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">S8</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784120059_6a5782fb41e62.jpeg" alt="قفص سقف مفتوح" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">قفص سقف مفتوح</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">400</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">قفص سقف مفتوح</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">4 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">400 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">S9</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784121247_6a57879fe0be1.jpeg" alt="60x30" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">60x30</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">225</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">60x30</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">225 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="10">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">Ca1</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784136754_6a57c432e8e0e.jpeg" alt="لتر بوكس" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">لتر بوكس</h3>
+                                <div class="product-category">قطط</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">35</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">لتر بوكس</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">35 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="10">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">Ca2</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784116128_6a5773a0e70f0.jpeg" alt="عرض لتر بوكس" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">عرض لتر بوكس</h3>
+                                <div class="product-category">قطط</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">45</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">عرض لتر بوكس</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">15 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">45 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="10">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">Ca3</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784116509_6a57751d4d707.jpeg" alt="اكاله قطط" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">اكاله قطط</h3>
+                                <div class="product-category">قطط</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">11</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">اكاله قطط</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">وسط</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">11 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="10">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">Ca4</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784118232_6a577bd81cafb.jpeg" alt="جاروف" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">جاروف</h3>
+                                <div class="product-category">قطط</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">5</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">جاروف</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">200 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">5 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="12">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">x1</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784122664_6a578d286cd1d.jpeg" alt="اكاله وقافه" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">اكاله وقافه</h3>
+                                <div class="product-category">اكسسوارات</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">5</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">اكاله وقافه</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">5 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="12">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">x2</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784122803_6a578db39186a.jpeg" alt="اكاله صابونه" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">اكاله صابونه</h3>
+                                <div class="product-category">اكسسوارات</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">5</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">اكاله صابونه</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">5 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="10">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">Ca5</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784115244_6a57702c83547.jpeg" alt="بوكس" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">بوكس</h3>
+                                <div class="product-category">قطط</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">110</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">بوكس</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">6 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">110 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">S13</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784115034_6a576f5a1ed24.jpeg" alt="صيني" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">صيني</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">90</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">صيني</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">37x23x35</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">10 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">90 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">S12</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784117501_6a5778fd4489c.jpeg" alt="قفص حسون" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">قفص حسون</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">65</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">قفص حسون</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">42x24x33</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">15 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">65 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">S23</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784115505_6a57713137c3a.jpeg" alt="قسام كبير" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">قسام كبير</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">170</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">قسام كبير</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">170 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">S14</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784120257_6a5783c10dca4.jpeg" alt="قسام صغير" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">قسام صغير</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">130</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">قسام صغير</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">32x27x44</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">8 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">130 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">S56</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784136106_6a57c1aae5a0a.jpeg" alt="قفص سعودي" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">قفص سعودي</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">85</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">قفص سعودي</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">40x22x29</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">85 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">600</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784122733_6a578d6d59a1a.jpeg" alt="47x30" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">47x30</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">170</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">47x30</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">170 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="5">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">S44</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784138884_6a57cc84cd763.jpeg" alt="2 اكاله كبير" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">2 اكاله كبير</h3>
+                                <div class="product-category">اقفاص</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">135</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">2 اكاله كبير</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">10 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">135 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="13">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">si1</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784139375_6a57ce6fe3b28.jpeg" alt="سلك" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">سلك</h3>
+                                <div class="product-category">حديد</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">42</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">سلك</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">42 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="13">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">si2</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784122615_6a578cf7ec036.jpeg" alt="حامل" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">حامل</h3>
+                                <div class="product-category">حديد</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">225</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">حامل</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">225 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="12">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">x5</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784138287_6a57ca2f580a6.jpeg" alt="سقايه 50" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">سقايه 50</h3>
+                                <div class="product-category">اكسسوارات</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">5</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">سقايه 50</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">50</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">5 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="12">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">x6</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784137057_6a57c561dcb2f.jpeg" alt="سقايه 100" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">سقايه 100</h3>
+                                <div class="product-category">اكسسوارات</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">100</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">سقايه 100</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">100</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">100 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="12">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">x7</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784138635_6a57cb8b25c9b.jpeg" alt="وقافه 47" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">وقافه 47</h3>
+                                <div class="product-category">اكسسوارات</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">4</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">وقافه 47</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">4 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="12">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">x8</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784138653_6a57cb9ddfd3a.jpeg" alt="وقافه كوكتيل" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">وقافه كوكتيل</h3>
+                                <div class="product-category">اكسسوارات</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">5</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">وقافه كوكتيل</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">5 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="13">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">si3</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784138521_6a57cb198e232.jpeg" alt="سلك 1.9" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">سلك 1.9</h3>
+                                <div class="product-category">حديد</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">42</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">سلك 1.9</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">1.9</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">42 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="13">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">si4</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784138532_6a57cb2443c41.jpeg" alt="سلك 2.5" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">سلك 2.5</h3>
+                                <div class="product-category">حديد</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">42</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">سلك 2.5</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">2.5</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">42 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="13">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">si5</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784138552_6a57cb3815275.jpeg" alt="سلك 1.25" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">سلك 1.25</h3>
+                                <div class="product-category">حديد</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">44</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">سلك 1.25</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">1.25</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">44 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="12">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">x9</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784138198_6a57c9d60a3ce.jpeg" alt="سقايه 300" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">سقايه 300</h3>
+                                <div class="product-category">اكسسوارات</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">8</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">سقايه 300</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">8 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="12">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">x10</div>
+                                                                                                                                    <img src="https://noahsec2006-cmyk.github.io/menu/images/uploads/products/1784138268_6a57ca1c0cd81.jpeg" alt="سقايه 400" class="product-img" loading="lazy">
+                                                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">سقايه 400</h3>
+                                <div class="product-category">اكسسوارات</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">10</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">سقايه 400</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">400مللي</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">10 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="12">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">X11</div>
+                                                            <i class="bi bi-camera text-muted" style="font-size: 2.5rem;"></i>
+                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">وقافه متر</h3>
+                                <div class="product-category">اكسسوارات</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">10</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">وقافه متر</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">100cm</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">10 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 product-item" data-category="12">
+                    <div class="product-card" onclick="this.classList.add('show-details')">
+                        
+                        <div class="product-img-wrapper">
+                            <div class="product-code">Si6</div>
+                                                            <i class="bi bi-camera text-muted" style="font-size: 2.5rem;"></i>
+                                                    </div>
+                        
+                        <div class="product-info">
+                            <div>
+                                <h3 class="product-name">ابواب</h3>
+                                <div class="product-category">اكسسوارات</div>
+                            </div>
+                            <div class="price-row">
+                                <div>
+                                    <span class="price-val">0</span>
+                                    <span class="price-curr">ج.م</span>
+                                </div>
+                                <i class="bi bi-plus-circle-fill text-primary" style="font-size: 1.5rem; color: var(--primary) !important;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Fast Slide-Up Details Overlay -->
+                        <div class="details-overlay">
+                            <h3 class="product-name">ابواب</h3>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-rulers"></i> الأبعاد</span>
+                                <span class="detail-value">غير متوفر</span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-box-seam"></i> التعبئة</span>
+                                <span class="detail-value">1 قفص / كرتونة</span>
+                            </div>
+
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-tag"></i> السعر النهائي</span>
+                                <span class="detail-value text-warning fs-4">0 ج.م</span>
+                            </div>
+
+                            <button class="close-details-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('show-details')">
+                                <i class="bi bi-chevron-down"></i> إخفاء التفاصيل
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                            </div>
+                
+    </div>
+
+    <!-- PDF Settings Modal (For Admin) -->
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function filterCategory(event, categoryId) {
+            // Update active button
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            // Filter products
+            const products = document.querySelectorAll('.product-item');
+            products.forEach(product => {
+                if (categoryId === 'all' || product.getAttribute('data-category') == categoryId) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        }
+        // Horizontal Scroll for Categories using Touch/Mouse
+        const slider = document.getElementById('catFilter');
+        let isDown = false, startX, scrollLeft;
+        if(slider) {
+            slider.addEventListener('mousedown', (e) => {
+                isDown = true; 
+                slider.style.cursor = 'grabbing';
+                startX = e.pageX - slider.offsetLeft;
+                scrollLeft = slider.scrollLeft;
+            });
+            slider.addEventListener('mouseleave', () => { isDown = false; slider.style.cursor = 'grab'; });
+            slider.addEventListener('mouseup', () => { isDown = false; slider.style.cursor = 'grab'; });
+            slider.addEventListener('mousemove', (e) => {
+                if(!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - slider.offsetLeft;
+                const walk = (x - startX) * 2;
+                slider.scrollLeft = scrollLeft - walk;
+            });
+        }
+
+            </script>
+</body>
+</html>
